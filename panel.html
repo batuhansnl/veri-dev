@@ -1,0 +1,296 @@
+<title>Elektrikli Araç Menzili</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+  /* Layout: sade tek sütun, büyük yazı. Üstte "olay ne?", sonra menzil hesaplayıcı, adımlar, bulgular. */
+  :root {
+    --bg: #f3f7f5;
+    --surface: #ffffff;
+    --surface-2: #eaf1ee;
+    --ink: #142019;
+    --muted: #55675e;
+    --line: #d8e3dd;
+    --brand: #159a6a;
+    --brand-soft: #dcf2e8;
+    --cold: #2f7fd6;
+    --cold-soft: #e0edfb;
+    --hot: #e0803a;
+    --warn: #c6881c;
+    --font-head: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+    --font-body: "Inter", ui-sans-serif, system-ui, sans-serif;
+    --font-num: "Space Grotesk", ui-monospace, monospace;
+    --radius: 18px;
+    --shadow: 0 1px 2px rgba(20,32,25,.05), 0 10px 30px rgba(20,32,25,.07);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0b1310; --surface: #13201a; --surface-2: #1a2a22; --ink: #e9f3ee;
+      --muted: #96a89f; --line: #253830; --brand: #3fc48c; --brand-soft: #123524;
+      --cold: #5aa0ea; --cold-soft: #112a44; --hot: #eb9a5c; --warn: #e0ad51; color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0b1310; --surface: #13201a; --surface-2: #1a2a22; --ink: #e9f3ee;
+    --muted: #96a89f; --line: #253830; --brand: #3fc48c; --brand-soft: #123524;
+    --cold: #5aa0ea; --cold-soft: #112a44; --hot: #eb9a5c; --warn: #e0ad51; color-scheme: dark;
+  }
+
+  * { box-sizing: border-box; }
+  body { background: var(--bg); color: var(--ink); font-family: var(--font-body); line-height: 1.6; -webkit-font-smoothing: antialiased; }
+  .wrap {
+    max-width: 760px; margin: 0 auto;
+    padding-left: max(18px, env(safe-area-inset-left, 0px));
+    padding-right: max(18px, env(safe-area-inset-right, 0px));
+    padding-block: 30px 60px;
+  }
+  h1,h2,h3 { font-family: var(--font-head); text-wrap: balance; margin: 0; }
+  h1 { font-size: clamp(1.7rem, 5vw, 2.5rem); letter-spacing: -.02em; }
+  h2 { font-size: 1.4rem; margin-bottom: 6px; }
+  p { margin: 0; }
+  .num { font-family: var(--font-num); font-variant-numeric: tabular-nums; }
+
+  header { text-align: center; margin-bottom: 10px; }
+  .eyebrow { text-transform: uppercase; letter-spacing: .14em; font-size: .72rem; font-weight: 600; color: var(--brand); }
+  .lead { color: var(--muted); font-size: 1.1rem; margin: 14px auto 0; max-width: 54ch; }
+  .theme-btn { border: 1px solid var(--line); background: var(--surface); color: var(--muted); border-radius: 999px; padding: 7px 14px; font-size: .8rem; cursor: pointer; font-family: var(--font-body); margin-top: 18px; }
+  .theme-btn:hover { color: var(--ink); }
+
+  section { margin-top: 30px; }
+  .card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 24px; box-shadow: var(--shadow); }
+  .tag { display: inline-block; background: var(--brand-soft); color: var(--brand); font-weight: 600; font-size: .85rem; padding: 2px 10px; border-radius: 999px; }
+  .explain p + p { margin-top: 14px; }
+  .explain b { color: var(--ink); }
+  .analogy { background: var(--surface-2); border-radius: 14px; padding: 18px 20px; margin-top: 18px; font-size: 1.02rem; }
+  .analogy .em { font-size: 1.5rem; }
+
+  /* hesaplayıcı */
+  .calc h2 { display: flex; align-items: center; gap: 10px; }
+  .row { margin-top: 20px; }
+  .row > .lbl { font-weight: 600; font-size: 1.02rem; display: block; margin-bottom: 8px; }
+  .opts { display: flex; gap: 8px; flex-wrap: wrap; }
+  .opt { flex: 1; min-width: 95px; border: 1.5px solid var(--line); background: var(--surface); color: var(--muted); border-radius: 12px; padding: 10px 8px; font-family: var(--font-body); font-size: .88rem; cursor: pointer; font-weight: 600; transition: .15s; text-align: center; }
+  .opt small { display: block; font-weight: 400; font-size: .72rem; opacity: .8; }
+  .opt[aria-pressed="true"] { border-color: var(--brand); background: var(--brand-soft); color: var(--brand); }
+
+  .slider-head { display: flex; justify-content: space-between; align-items: baseline; }
+  .slider-head .read { font-family: var(--font-num); font-weight: 700; font-size: 1.1rem; }
+  input[type=range] { width: 100%; height: 8px; margin-top: 8px; }
+  #temp { accent-color: var(--cold); }
+  .ends { display: flex; justify-content: space-between; font-size: .78rem; color: var(--muted); margin-top: 4px; }
+  .preset { margin-top: 10px; display: flex; gap: 8px; flex-wrap: wrap; }
+  .chip { border: 1px solid var(--line); background: var(--surface-2); color: var(--ink); border-radius: 999px; padding: 6px 13px; font-size: .82rem; cursor: pointer; font-family: var(--font-body); }
+  .chip:hover { border-color: var(--brand); color: var(--brand); }
+
+  .result { margin-top: 24px; border-radius: var(--radius); padding: 26px 24px; text-align: center; background: var(--brand-soft); transition: background .25s; }
+  .result .menzil { font-family: var(--font-num); font-size: 3.2rem; font-weight: 700; line-height: 1; color: var(--brand); }
+  .result .menzil small { font-size: 1.1rem; font-weight: 600; }
+  .result .sub { color: var(--muted); margin-top: 6px; }
+  .result .bar { height: 16px; border-radius: 999px; background: var(--line); overflow: hidden; margin: 18px auto 6px; max-width: 440px; }
+  .result .bar > span { display: block; height: 100%; border-radius: 999px; background: var(--brand); transition: width .35s, background .35s; }
+  .result .loss { font-size: .9rem; margin-top: 8px; }
+  .result .loss b { color: var(--hot); font-family: var(--font-num); }
+  .mini { display: flex; justify-content: center; gap: 24px; margin-top: 16px; flex-wrap: wrap; }
+  .mini div { font-size: .82rem; color: var(--muted); }
+  .mini b { display: block; font-family: var(--font-num); font-size: 1.1rem; color: var(--ink); }
+
+  .steps { display: grid; gap: 12px; margin-top: 6px; }
+  .step { display: flex; gap: 16px; align-items: flex-start; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 16px 18px; }
+  .step .n { flex: none; width: 34px; height: 34px; border-radius: 10px; background: var(--brand-soft); color: var(--brand); font-family: var(--font-num); font-weight: 700; display: flex; align-items: center; justify-content: center; }
+  .step b { font-family: var(--font-head); }
+  .step p { color: var(--muted); font-size: .92rem; margin-top: 2px; }
+
+  .facts { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 6px; }
+  @media (max-width: 520px) { .facts { grid-template-columns: 1fr; } }
+  .fact { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 18px; }
+  .fact .big { font-family: var(--font-num); font-size: 1.5rem; font-weight: 700; }
+  .fact .big.cold { color: var(--cold); }
+  .fact .big.green { color: var(--brand); }
+  .fact p { color: var(--muted); font-size: .9rem; margin-top: 2px; }
+
+  footer { margin-top: 44px; color: var(--muted); font-size: .8rem; text-align: center; line-height: 1.7; }
+</style>
+
+<div class="wrap">
+  <header>
+    <div class="eyebrow">Veri Madenciliği Ödevi · Sade Anlatım</div>
+    <h1>Elektrikli Araç Soğukta Kaç Km Gider?</h1>
+    <p class="lead">Elektrikli arabalar soğukta daha az yol gider — batarya üşür, bir de kabini ısıtmak enerji yer. Biz bilgisayara binlerce örnek gösterip "şu koşullarda kaç km gider?" tahminini öğrettik. Sen de dene.</p>
+    <button class="theme-btn" id="themeBtn">◐ Tema değiştir</button>
+  </header>
+
+  <!-- BU NE -->
+  <section>
+    <div class="card explain">
+      <span class="tag">Önce şunu anla</span>
+      <h2 style="margin-top:12px">Olay ne?</h2>
+      <p>Benzinli arabada depo soğukta da aşağı yukarı aynı yolu gider. Ama elektrikli arabada durum farklı: <b>batarya soğuğu sevmez</b>. Üstelik kışın içeriyi ısıtmak da bataryadan enerji çeker. Sonuç: <b>kışın menzil ciddi düşer</b>.</p>
+      <p>Biz de farklı sıcaklık, farklı araç ve farklı sürüşlerden oluşan veriyi bilgisayara verdik. O da aradaki ilişkiyi öğrendi ve artık <b>"-15°C'de, otoyolda, bu araç ~şu kadar km gider"</b> diyebiliyor.</p>
+      <div class="analogy">
+        <span class="em">🔋</span> <b>Basit benzetme:</b> Telefonun da kışın dışarıda çabuk biter, değil mi? Araba bataryası da aynı. Soğuk, enerjiyi hızlı tüketir.
+      </div>
+    </div>
+  </section>
+
+  <!-- HESAPLAYICI -->
+  <section>
+    <div class="card calc">
+      <h2>🧮 Sen dene: Menzil Hesaplayıcı</h2>
+      <p style="color:var(--muted); margin-bottom:4px">Araç ve koşulları seç, tahmini menzili anında gör.</p>
+
+      <div class="row">
+        <span class="lbl">🚗 Araç (batarya büyüklüğü)</span>
+        <div class="opts" id="battGroup">
+          <button class="opt" data-batt="40" aria-pressed="false">Küçük<small>40 kWh</small></button>
+          <button class="opt" data-batt="64" aria-pressed="true">Orta<small>64 kWh</small></button>
+          <button class="opt" data-batt="82" aria-pressed="false">Büyük<small>82 kWh</small></button>
+          <button class="opt" data-batt="100" aria-pressed="false">Çok büyük<small>100 kWh</small></button>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="slider-head">
+          <span class="lbl" style="margin:0">🌡️ Dış sıcaklık</span>
+          <span class="read" id="tempRead">20°C</span>
+        </div>
+        <input type="range" id="temp" min="-20" max="40" value="20" step="1">
+        <div class="ends"><span>-20°C (dondurucu)</span><span>+40°C (çok sıcak)</span></div>
+        <div class="preset">
+          <button class="chip" data-temp="-15">🥶 Erzurum kışı (-15°C)</button>
+          <button class="chip" data-temp="20">🍃 İdeal (20°C)</button>
+          <button class="chip" data-temp="35">☀️ Yaz sıcağı (35°C)</button>
+        </div>
+      </div>
+
+      <div class="row">
+        <span class="lbl">🛣️ Nasıl sürüyorsun?</span>
+        <div class="opts" id="roadGroup">
+          <button class="opt" data-road="0" aria-pressed="true">Şehir içi<small>düşük hız</small></button>
+          <button class="opt" data-road="1" aria-pressed="false">Otoyol<small>yüksek hız</small></button>
+        </div>
+      </div>
+
+      <div class="result" id="result">
+        <div class="menzil"><span id="menzilVal">325</span> <small>km</small></div>
+        <div class="sub" id="sub">İdeal havada bu araç bu kadar gider</div>
+        <div class="bar"><span id="bar"></span></div>
+        <div class="loss" id="loss"></div>
+        <div class="mini">
+          <div>Tüketim<b id="tuketim">16,5</b><span style="font-size:.7rem">kWh/100km</span></div>
+          <div>En iyi hâli<b id="ideal">388</b><span style="font-size:.7rem">km (20°C)</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ADIMLAR -->
+  <section>
+    <h2 style="margin-bottom:12px">Bu projede ne yaptık? (6 adım)</h2>
+    <div class="steps">
+      <div class="step"><span class="n">1</span><div><b>Veriyi temizledik</b><p>Bozuk sensör değerlerini (999°C gibi) ve eksik kayıtları düzelttik.</p></div></div>
+      <div class="step"><span class="n">2</span><div><b>Veriye baktık</b><p>Menzilin en yüksek olduğu nokta ~20°C; iki yana gidince düşüyor.</p></div></div>
+      <div class="step"><span class="n">3</span><div><b>Bilgisayarı eğittik</b><p>Verinin %70'iyle öğretip %30'uyla sınava soktuk. Bu bir <b>regresyon</b> (sayı tahmini).</p></div></div>
+      <div class="step"><span class="n">4</span><div><b>Başarısını ölçtük</b><p>R² = 0,95 çıktı — yani tüketimin %95'ini doğru açıklıyor.</p></div></div>
+      <div class="step"><span class="n">5</span><div><b>Neyin önemli olduğunu bulduk</b><p>Sıcaklık ve otoyol/şehir farkı en belirleyici faktörler.</p></div></div>
+      <div class="step"><span class="n">6</span><div><b>Yorumladık</b><p>Erzurum kışı senaryosunu çıkardık (aşağıda).</p></div></div>
+    </div>
+  </section>
+
+  <!-- SONUÇ -->
+  <section>
+    <h2 style="margin-bottom:12px">Ne çıktı? (En önemli şeyler)</h2>
+    <div class="facts">
+      <div class="fact"><div class="big green">R² 0,95</div><p><b>Model başarısı.</b> Tüketimin neredeyse tamamını doğru açıkladı.</p></div>
+      <div class="fact"><div class="big cold">~%40</div><p><b>Kış menzil kaybı.</b> -15°C'de menzil, ideal havaya göre ~%40 düşüyor.</p></div>
+      <div class="fact"><div class="big">~20°C</div><p><b>En verimli sıcaklık.</b> Bu noktadan uzaklaştıkça tüketim artıyor.</p></div>
+      <div class="fact"><div class="big cold">~%46</div><p><b>Soğuk + otoyol.</b> İkisi birleşince menzil neredeyse yarıya iniyor.</p></div>
+    </div>
+  </section>
+
+  <footer>
+    💡 Sunumda şunu söyle: "Bu, önceki projelerden farklı olarak bir <b>regresyon</b> problemi — 'evet/hayır' değil, 'kaç km?' diye bir <b>sayı</b> tahmin ediyoruz. O yüzden başarıyı doğrulukla değil, <b>R²</b> ile ölçtük."<br><br>
+    Not: Buradaki sayılar fiziğe dayalı demo veriye aittir. Gerçek veri için ev-database.org'dan model menzilleri çekilebilir.
+  </footer>
+</div>
+
+<script>
+  const themeBtn = document.getElementById('themeBtn');
+  themeBtn.addEventListener('click', () => {
+    const cur = document.documentElement.getAttribute('data-theme');
+    const next = cur === 'dark' ? 'light' : (cur === 'light' ? 'dark' :
+      (matchMedia('(prefers-color-scheme: dark)').matches ? 'light' : 'dark'));
+    document.documentElement.setAttribute('data-theme', next);
+  });
+
+  // Eğitilmiş Doğrusal Regresyon katsayıları (tüketim kWh/100km tahmini)
+  // Özellikler: [Sapma=(t-20), Sapma2=(t-20)^2, Soguk_ek=max(0,20-t), Otoyol, Iklimlendirme, Batarya]
+  const M = {
+    coef: [0.002804692787130518, 0.0038759956843563933, 0.09613467824740965,
+           3.2204212995250407, 1.8548332945012314, -0.0008156658703209177],
+    intercept: 15.044961356151092
+  };
+  function tuketimHesapla(t, otoyol, iklim, batt){
+    const sapma=t-20, sapma2=sapma*sapma, soguk=Math.max(0,20-t);
+    const f=[sapma, sapma2, soguk, otoyol, iklim, batt];
+    let c=M.intercept;
+    for(let i=0;i<6;i++) c+=M.coef[i]*f[i];
+    return c;
+  }
+
+  const state = { batt: 64, road: 0 };
+  function bindGroup(id, key){
+    document.querySelectorAll(`#${id} .opt`).forEach(btn=>{
+      btn.addEventListener('click', ()=>{
+        state[key] = Number(btn.dataset[key==='batt'?'batt':'road']);
+        document.querySelectorAll(`#${id} .opt`).forEach(b=>b.setAttribute('aria-pressed', b===btn?'true':'false'));
+        run();
+      });
+    });
+  }
+  bindGroup('battGroup','batt');
+  bindGroup('roadGroup','road');
+
+  const temp=document.getElementById('temp'), tempRead=document.getElementById('tempRead');
+  document.querySelectorAll('.chip').forEach(c=>c.addEventListener('click',()=>{ temp.value=c.dataset.temp; run(); }));
+  temp.addEventListener('input', run);
+
+  const menzilVal=document.getElementById('menzilVal'), sub=document.getElementById('sub'),
+        bar=document.getElementById('bar'), loss=document.getElementById('loss'),
+        tuketimEl=document.getElementById('tuketim'), idealEl=document.getElementById('ideal'),
+        result=document.getElementById('result');
+  const trN = (x,d=0)=>Number(x).toLocaleString('tr-TR',{minimumFractionDigits:d,maximumFractionDigits:d});
+
+  function run(){
+    const t=Number(temp.value);
+    tempRead.textContent = t + '°C';
+    // kış/yaz ise iklimlendirme açık varsay
+    const iklim = (t<8 || t>28) ? 1 : 0;
+
+    const tuketim = tuketimHesapla(t, state.road, iklim, state.batt);
+    const menzil = state.batt / tuketim * 100;
+
+    // ideal: 20°C, aynı yol, iklim kapalı
+    const idealTuk = tuketimHesapla(20, state.road, 0, state.batt);
+    const idealMenzil = state.batt / idealTuk * 100;
+    const kayip = Math.max(0, (1 - menzil/idealMenzil) * 100);
+
+    menzilVal.textContent = trN(menzil);
+    tuketimEl.textContent = trN(tuketim,1);
+    idealEl.textContent = trN(idealMenzil);
+    bar.style.width = Math.max(4, (menzil/idealMenzil)*100) + '%';
+
+    // renk: soğuk mavi, ideal yeşil, sıcak turuncu
+    const col = t <= 5 ? 'var(--cold)' : (t >= 30 ? 'var(--hot)' : 'var(--brand)');
+    bar.style.background = col;
+    result.style.background = t <= 5 ? 'var(--cold-soft)' : 'var(--brand-soft)';
+    document.querySelector('.menzil').style.color = col;
+
+    if(kayip < 3){
+      sub.textContent = 'İdeal havaya yakın — menzil en iyi hâlinde.';
+      loss.innerHTML = '';
+    } else {
+      const neden = t<=5 ? (state.road? 'soğuk + otoyol' : 'soğuk hava') : (state.road? 'otoyol + klima' : 'ideal dışı sıcaklık');
+      sub.textContent = 'İdeal havada ~' + trN(idealMenzil) + ' km giderdi.';
+      loss.innerHTML = 'Bu koşulda menzil kaybı: <b>%' + trN(kayip) + '</b> (' + neden + ')';
+    }
+  }
+  run();
+</script>

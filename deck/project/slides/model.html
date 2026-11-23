@@ -1,0 +1,21 @@
+<section id="model" class="dark has-footer" data-transition="fade">
+  <p class="eyebrow">Adım 3 · Modelleme ve Değerlendirme</p>
+  <h2>İki model kurduk, başarıyı R&sup2; ile ölçtük</h2>
+  <div class="cards" style="margin-top:48px; align-items:flex-start;">
+    <div style="flex:1.2;">
+      <table>
+        <thead><tr><th>Model</th><th class="r">R&sup2;</th><th class="r">Ort. hata (MAE)</th></tr></thead>
+        <tbody>
+          <tr><td>Doğrusal Regresyon</td><td class="r num good">0,95</td><td class="r num">0,66</td></tr>
+          <tr><td>Random Forest</td><td class="r num">0,94</td><td class="r num">0,76</td></tr>
+        </tbody>
+      </table>
+      <p style="margin-top:28px; font-size:28px; color:var(--on-dark-soft);">%70 eğitim &ndash; %30 test ayrımı. R&sup2; 1&apos;e ne kadar yakınsa model o kadar iyi.</p>
+    </div>
+    <div class="col" style="flex:1;">
+      <div class="card"><h3 class="c-green">Neden Accuracy değil?</h3><p style="color:var(--on-dark-soft);">Burada sayı tahmin ediyoruz. &ldquo;Doğru/yanlış&rdquo; yok; bu yüzden R&sup2;, MAE ve RMSE kullanılır.</p></div>
+    </div>
+  </div>
+  <div class="footer"><span>EV Menzil · Veri Madenciliği Ödevi</span><span class="num">07</span></div>
+  <aside>Veriyi yüzde yetmiş eğitim, yüzde otuz test olarak ayırdık ve iki model kurduk: Doğrusal Regresyon ve Random Forest. Doğrusal Regresyon R kare 0,95 ile en iyisi oldu; yani tüketimdeki değişimin yüzde 95'ini açıklıyor. Burada doğruluk yüzdesi kullanmadık çünkü bir sayı tahmin ediyoruz; onun yerine R kare, MAE ve RMSE kullanılır. Bu, sınıflandırma projelerinden temel farkımız.</aside>
+</section>

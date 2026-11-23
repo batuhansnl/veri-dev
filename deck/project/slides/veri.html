@@ -1,0 +1,22 @@
+<section id="veri" class="alt has-footer" data-transition="fade">
+  <p class="eyebrow">Veri Seti ve Yöntem</p>
+  <h2>6.000 sürüş kaydı, 6 değişken</h2>
+  <div class="cards" style="margin-top:52px; align-items:flex-start;">
+    <div class="col" style="flex:1.1;">
+      <h3 style="font-size:32px;">Değişkenler (özellikler)</h3>
+      <ul class="clean">
+        <li>Dış sıcaklık (°C): −20 … +40</li>
+        <li>Sürüş tipi: şehir içi / otoyol</li>
+        <li>Batarya kapasitesi (kWh)</li>
+        <li>Isıtma / klima açık mı?</li>
+      </ul>
+    </div>
+    <div class="col" style="flex:1;">
+      <div class="card"><h3>Hedef değişken</h3><p style="font-size:30px;">Tüketim (kWh/100km) &rarr; buradan menzil (km) hesaplanır.</p></div>
+      <div class="card"><h3>Yöntem</h3><p style="font-size:30px;">Bu bir <b>regresyon</b> problemi: &ldquo;evet/hayır&rdquo; değil, bir <b>sayı</b> tahmin ediyoruz.</p></div>
+    </div>
+  </div>
+  <p style="margin-top:44px; font-size:26px; color:var(--ink-soft);">Not: Veri, elektrikli araçların bilinen fiziğine dayalı olarak üretilmiştir (menzil ~20&deg;C&apos;de en yüksek). Gerçek veri için ev-database.org kullanılabilir.</p>
+  <div class="footer"><span>EV Menzil · Veri Madenciliği Ödevi</span><span class="num">03</span></div>
+  <aside>Veri setimizde 6.000 sürüş kaydı ve 6 değişken var: dış sıcaklık, sürüş tipi, batarya kapasitesi ve iklimlendirme durumu. Tahmin etmek istediğimiz hedef ise tüketim; ondan da menzili hesaplıyoruz. Önemli nokta: bu bir regresyon problemi, yani bir sayı tahmin ediyoruz. Veriyi elektrikli araç fiziğine dayalı ürettik, gerçek veri için ev-database.org bir kaynak.</aside>
+</section>

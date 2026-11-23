@@ -1,0 +1,19 @@
+{
+  "v": 5,
+  "createdOnFiles": { "v": 1, "at": "2026-11-19T12:00:00Z" },
+  "lists": "css",
+  "format": { "v": 1, "shared": ["project/deck.css"] },
+  "title": "EV Menzil Sunumu",
+  "order": ["cover", "problem", "veri", "onisleme", "istatistik", "grafik", "model", "erzurum", "arac", "bulgular", "kapanis"],
+  "sections": {
+    "s1": { "description": "Giriş ve problem tanımı", "start": "cover" },
+    "s2": { "description": "Veri seti, ön işleme ve yöntem", "start": "veri" },
+    "s3": { "description": "Grafikler, model ve sonuçlar", "start": "grafik" },
+    "s4": { "description": "Bulgular ve kapanış", "start": "bulgular" }
+  },
+  "faces": {
+    "space-grotesk": { "family": "Space Grotesk", "href": "https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" },
+    "inter": { "family": "Inter", "href": "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" }
+  },
+  "designSystems": []
+}
